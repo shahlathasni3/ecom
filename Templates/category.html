@@ -1,0 +1,74 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block metadescription %}
+   {% if category %}
+       {{ category.description|truncatewords:155 }}
+   {% else %}
+      Welcome to E_KART here you can buy various things...
+        {% endif %}
+   {% endblock %}
+{% block title %}
+  {% if category %}
+    {{category.name}} - E-KART
+  {% else %}
+    See our Products in E-KART
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx_auto">
+        <p><a href="{% url 'EcommerceApp:allProdCat' %}">Our Product Collections</a></p>
+    </div>
+        </div>
+</div>
+{% endif %}
+
+<div class="mx_auto">
+    {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+     <img class="my_image my_image_padding" src="{% static 'img/E-KART.png' %}" alt="our products" width="1300px" height="866px">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">Our Product Collections</h1>
+    <p class="text-justify">E-kart is India's leading online retailer, offering consumers a variety of products at unbeatable prices. E-kart.com has been on the top of the online shopping list for Indian consumers for over 15 years. E-kart offers the best of products in all major categories, including electronics, fashion, home and living, mobile phones, mobiles, appliances, and books.</p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for Product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card-text-center" style=" min-width:10rem;">
+                <a href="{{Product.get_url}}"><img class="card-img-top my_image" src="{{Product.image.url}}" alt="{{Product.name}}"></a>
+                <div class="card-body">
+                    <h4>{{Product.name}}</h4>
+                    <p>{{Product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <div class="mx-auto">
+         {% if products.paginator.num_pages > 1 %}
+         <hr>
+            <div class="text-center">
+              {% for pg in products.paginator.page_range %}
+                <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    <br>
+</div>
+{% endblock %}
